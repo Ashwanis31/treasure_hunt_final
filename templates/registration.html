@@ -1,0 +1,33 @@
+<!-- {% load static %} -->
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Treasure Hunt Resistration </title>
+  <link rel="stylesheet" href="{% static 'style/r_style.css' %}">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!-- multistep form -->
+<form action="register" method="POST" id="msform">
+  
+  <!-- fieldsets -->
+  <br>
+  <br>
+    {% csrf_token %}
+  <fieldset>
+    <h2 class="fs-title">Team Resistration</h2>
+    <h3 class="fs-subtitle"></h3>
+    <input type="text" name="username" placeholder="Team Id"/>
+    <input type="password" name="password1" placeholder="Password" />
+    <input type="password" name="password2" placeholder="Confirm Password"/>
+    <input type="text" name="Leader_name" placeholder="Leader name"/>
+    <input type="submit" name="submit" class="submit action-button"/>
+  </fieldset>
+</form>
+<!-- partial -->
+
+</body>
+</html>

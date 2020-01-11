@@ -1,0 +1,138 @@
+{% load static %}
+{% static "puzzles" as base_url %}
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Treasure Hunt</title>
+  <link rel="stylesheet" href="{% static 'style/i_style.css' %}">
+  <script>
+    function myFunction() {
+      var txt;
+      if (confirm("Click Ok to use Magic Card")) {
+        txt = "New riddle opened";
+      } else {
+        txt = "You pressed Cancel!";
+      }
+      document.getElementById("demo").innerHTML = txt;
+    }
+    </script>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<section class="shop">
+  <div class="shop__header">
+    <h1 class="shop__title">Welcome {{team}}</h1>
+    <p class="shop__text">
+      <a class="button js-toggle-cart" href="#" > Dashboard</a>
+      <a class="button js-add-product" href="magiccard" onclick="myFunction()" id="demo"> Magic Card</a>
+      <a class = "button js-add-product"  href="logout" >Log out</a>
+    </p>
+  </div>
+  
+  <div class="shop__products">
+    <div class="products">
+      {% for riddle in riddles %}
+      <div class="products__item">
+
+        <article class="product ">
+          <h1 class="product__title">{{riddle.num}}</h1>
+          <!-- Trigger the Modal -->
+          <img id="{{riddle.num}}" src="{{base_url}}/{{riddle.img}}" alt="Snow" style="width:100%;max-width:300px" class="riddleImg">
+
+            <!-- The Modal -->
+            <div id="M{{riddle.num}}" class="modal">
+
+            <!-- The Close Button -->
+            <span class="close" id="MC{{riddle.num}}">&times;</span>
+
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="MI{{riddle.num}}">
+
+            <!-- Modal Caption (Image Text) -->
+            <a href="{{base_url}}/{{riddle.img}}" download class="MD{{riddle.num}}"><button>Download</button></a>
+            </div>
+            <h1>Number of Submitions: {{riddle.sub}} </h1>
+            <br><div class="choose_file">
+          <span>Choose File</span>
+          {% if riddle.isSolved is False %}
+          {% if riddle.sub < 4 %}
+          <form method="post" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <input name="myfile" type="file" name="myFile"/><br>
+            <input type="text" name="riddle" style="display: none;" value="{{riddle.num}}">
+            <input class="button js-add-product" type="submit" value="upload" />
+          </form>
+          {% else %}
+          <h1>Bad Luck</h1>
+          {% endif %}
+          {% else %}
+          <h1>solved</h1>
+          {% endif %}
+            </div>
+            <br>
+          {% if riddle.numAttemp == 0 %}
+            <span class="dot" style="background-color:#bbb"></span>
+            <span class="dot" style="background-color:#bbb"></span>
+            <span class="dot" style="background-color:#bbb"></span>
+          {% elif riddle.numAttemp == 1 %}
+              {% if riddle.isSolved is True %}
+              <span class="dot" style="background-color:green"></span>
+              {% else %}
+              <span class="dot" style="background-color:red"></span>
+              {% endif %}
+              <span class="dot" style="background-color:#bbb"></span>
+              <span class="dot" style="background-color:#bbb"></span>
+          {% elif riddle.numAttemp == 2 %}
+              <span class="dot" style="background-color:red"></span>
+              {% if riddle.isSolved is True %}
+              <span class="dot" style="background-color:green"></span>
+              {% else %}
+              <span class="dot" style="background-color:red"></span>
+              {% endif %}
+              <span class="dot" style="background-color:#bbb"></span>
+          {% elif riddle.numAttemp == 3 %}
+              <span class="dot" style="background-color:red"></span>
+              <span class="dot" style="background-color:red"></span>
+              {% if riddle.isSolved is True %}
+              <span class="dot" style="background-color:green"></span>
+              {% else %}
+              <span class="dot" style="background-color:red"></span>
+              {% endif %}
+          {% else %}
+            <span class="dot" style="background-color:red"></span>
+            <span class="dot" style="background-color:red"></span>
+            <span class="dot" style="background-color:red"></span>
+          {% endif %}
+
+        </article>
+      </div> 
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<aside class="cart js-cart">
+  <div class="cart__header">
+    <h1 class="cart__title">DASHBOARD</h1>
+    <p class="cart__text">
+      <a class="button button--light js-toggle-cart" href="#" title="Close cart">
+        Close
+      </a>
+    </p>
+  </div>
+  <div class="cart__footer">
+    <p class="boxes" >Magic card: {{j}} </p>
+    <p class="boxes">your score: {{score}}</p>
+    <p class="boxes">solved: {{sol}}</p>
+  </div>
+</aside>
+
+<div class="lightbox js-lightbox js-toggle-cart"></div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script><script  src="{% static 'script/i_script.js' %}"></script>
+
+</body>
+</html>
